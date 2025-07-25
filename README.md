@@ -10,7 +10,7 @@ This repository contains the tasks for the **UNICEF Data and Analytics technical
 
 -   To preserve your anonymity:
 
-    -   ❌ Do **not fork** this repository\
+    -   ❌ Do **not fork** this repository
     -   ❌ Do **not include your name** anywhere in the submitted assessment
 
 -   Please respect the **confidential nature of this test** and **do not share or discuss** its content with others.
@@ -77,7 +77,7 @@ for countries categorized as **on-track** or **off-track** in achieving under-fi
     -   📈 **Population Data**: UN World Population Prospects, 2022\
         *File: `WPP2022_GEN_F01_DEMOGRAPHIC_INDICATORS_COMPACT_REV1.xlsx` (located in `01_rawdata/`)*
 
-    -   🧒 **Under-five mortality classification**:
+    -   **Under-five mortality classification**:
 
         -   On-track if `Status.U5MR` is `"achieved"` or `"on-track"`
         -   Off-track if `Status.U5MR` is `"acceleration needed"`\
