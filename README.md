@@ -71,10 +71,14 @@ for countries categorized as **on-track** or **off-track** in achieving under-fi
 
 ## 📊 Data Sources
 
--   **Retrieve the following indicators** from the UNICEF Global Data Repository `[LINK]` at the country level for the years **2018–2022**:
+-   
+
+    -   **Retrieve the following indicators** from the UNICEF Global Data Repository [`LINK`](https://data.unicef.org/resources/data_explorer/unicef_f/?ag=UNICEF&df=GLOBAL_DATAFLOW&ver=1.0&dq=.MNCH_ANC4+MNCH_SAB.&startPeriod=2018&endPeriod=2022) at the country level for the years **2018–2022**:
     -   **ANC4**: % of women (aged 15–49) with at least 4 antenatal care visits\
     -   **SBA**: % of deliveries attended by skilled health personnel
+
 -   Use the following additional files:
+
     -   📈 **Population Data**: UN World Population Prospects, 2022\
         *File: `WPP2022_GEN_F01_DEMOGRAPHIC_INDICATORS_COMPACT_REV1.xlsx` (located in `01_rawdata/`)*
 
