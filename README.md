@@ -14,6 +14,7 @@ This repository contains the tasks for the **UNICEF Data and Analytics technical
     -   ❌ Do **not include your name** anywhere in the submitted assessment
 
 -   Please respect the **confidential nature of this test** and **do not share or discuss** its content with others.
+-   Please add the **positions you applied for** in the final output and your readme. Please **do not include your name**.
 
 -   The focus of this test is to assess:
 
