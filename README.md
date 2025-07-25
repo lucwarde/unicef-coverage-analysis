@@ -32,8 +32,7 @@ This repository contains the tasks for the **UNICEF Data and Analytics technical
 
 -   **Estimated completion time**: 4 hours
 
--   ⏱️ **You have 48 hours** to complete the assessment and share back your GitHub repository link.
-    Commits made **after 48 hours** will not be considered for evaluation.
+-   ⏱️ **You have 48 hours** to complete the assessment and share back your GitHub repository link. Commits made **after 48 hours** will not be considered for evaluation.
 
 ------------------------------------------------------------------------
 
