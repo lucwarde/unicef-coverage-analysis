@@ -1,11 +1,6 @@
 # 01_data_cleaning.R
 # Clean and merge ANC4, SBA, births and U5MR status for UNICEF D&A analysis
 
-library(tidyverse)
-library(readxl)
-
-
-
 
 # ---- 1. Load and clean ANC4 + SBA data ----
 
@@ -18,21 +13,23 @@ coverage_full_data <- fread(file.path(dir_raw, "fusion_GLOBAL_DATAFLOW_UNICEF_1.
 coverage_full_clean_data <- coverage_full_data %>%
   rename_with(~ sub(":.*", "", .x)) %>%  # Clean column names
   select(country = REF_AREA, indicator = INDICATOR, year = TIME_PERIOD, coverage = OBS_VALUE) %>% 
+  filter(str_sub(country, 4, 4) == ":") %>% # Keep only rows where the 4th character is ":" (ensures keep only country ")
   filter(indicator %in% c("MNCH_ANC4: Antenatal care 4+ visits - percentage of women (aged 15-49 years) attended at least four times during pregnancy by any provider", 
                           "MNCH_SAB: Skilled birth attendant - percentage of deliveries attended by skilled health personnel")
          & year>="2018", year<="2022")%>%
-  mutate(iso3 = str_extract(country, "^[A-Z]{3}")) %>%
+  mutate(iso3 = str_sub(country, 1, 3)) %>%
+  filter(!is.na(iso3)) %>% 
   arrange(iso3, indicator, desc(year)) %>% 
   distinct(iso3, indicator, .keep_all = TRUE) # keep most recent estimate per country
-           
-           
+
+
 
 # ---- 2. Load births (2022 projections) ----
 
 
 births_raw_data <- read_excel(file.path(dir_raw, "WPP2022_GEN_F01_DEMOGRAPHIC_INDICATORS_COMPACT_REV1.xlsx"),    sheet = "Projections", skip = 16,  col_type = "text")
 
-births_2022_data <- births_raw %>%
+births_2022_data <- births_raw_data %>%
   filter(Year == "2022") %>%
   select(
     iso3 = `ISO3 Alpha-code`,
@@ -53,20 +50,42 @@ class_mort_data <- read_excel(file.path(dir_raw, "On-track and off-track countri
     str_to_lower(Status.U5MR) == "acceleration needed" ~ "off-track",
     TRUE ~ NA_character_
   )) %>%
-  select(iso3, group)
+  select(iso3, OfficialName, group)
 
-         
-# ---- 4. Merge all datasets ----
 
-df_final <- coverage_full_clean_data %>%
-  left_join(births_2022_data, by = "iso3") %>%
-  left_join(class_mort_data, by = "iso3")
+# ---- 4. Merge datasets (full join to keep everything) ----
 
-         
+df_merge <- coverage_full_clean_data %>%
+  full_join(births_2022_data, by = "iso3") %>%
+  full_join(class_mort_data, by = "iso3")
+
+
+
+# ---- 5. Save excluded countries (missing data or group) ----
+
+excluded_countries <- df_merge %>%
+  filter(
+    is.na(group) |
+      is.na(coverage) |
+      is.na(births_2022)
+  ) %>%
+  select(iso3,OfficialName,coverage, births_2022, group)
+
+
+# ---- 6. Filter for valid countries with complete data ----
+
+df_final <- df_merge %>%
+  filter(
+    !is.na(group),
+    !is.na(coverage),
+    !is.na(births_2022)
+  )
+
 
 # ---- 5. Save outputs ----
 
 # Save as CSV and RDS
+write_csv(excluded_countries, file.path(dir_out, "excluded_countries.csv"), col_names = FALSE)
 write_csv(df_final, file.path(dir_out, "cleaned_data.csv"))
 saveRDS(df_final, file.path(dir_out, "cleaned_data.rds"))
 
