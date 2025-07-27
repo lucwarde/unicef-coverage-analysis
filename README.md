@@ -62,7 +62,7 @@ Create a **well-structured repository** with the following:
 
 You are required to **calculate the population-weighted coverage** of two health services:
 
--   **Antenatal care (ANC4)**: % of women (aged 15–49) with at least 4 antenatal care visits\
+-   **Antenatal care (ANC4)**: % of women (aged 15–49) with at least 4 antenatal care visits
 -   **Skilled birth attendance (SBA)**: % of deliveries attended by skilled health personnel
 
 for countries categorized as **on-track** or **off-track** in achieving under-five mortality targets (as of 2022).
@@ -73,7 +73,7 @@ for countries categorized as **on-track** or **off-track** in achieving under-fi
 
 -   **Retrieve the following indicators** from the UNICEF Global Data Repository [`LINK`](https://data.unicef.org/resources/data_explorer/unicef_f/?ag=UNICEF&df=GLOBAL_DATAFLOW&ver=1.0&dq=.MNCH_ANC4+MNCH_SAB.&startPeriod=2018&endPeriod=2022) at the country level for the years **2018–2022**:
 
-    -   **ANC4**: % of women (aged 15–49) with at least 4 antenatal care visits\
+    -   **ANC4**: % of women (aged 15–49) with at least 4 antenatal care visits
     -   **SBA**: % of deliveries attended by skilled health personnel
 
 -   Use the following additional files:
@@ -99,7 +99,7 @@ for countries categorized as **on-track** or **off-track** in achieving under-fi
 
 ### 2. Calculate Population-Weighted Coverage
 
--   For each group (**on-track** and **off-track**), calculate **population-weighted averages** for ANC4 and SBA\
+-   For each group (**on-track** and **off-track**), calculate **population-weighted averages** for ANC4 and SBA
 -   Use **projected births for 2022** as weights
 
 ### 3. Reporting
