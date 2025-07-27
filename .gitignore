@@ -12,6 +12,12 @@
 # Example code in package build process
 *-Ex.R
 
+# Project-specific: prevent pushing raw or sensitive data
+01_rawdata/
+*.xlsx
+*.csv
+*.dta
+
 # Output files from R CMD build
 /*.tar.gz
 
