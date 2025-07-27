@@ -60,37 +60,9 @@ df_merge <- coverage_full_clean_data %>%
   full_join(class_mort_data, by = "iso3")
 
 
-
-# ---- 5. Save excluded countries (missing data or group) ----
-
-excluded_countries <- df_merge %>%
-  filter(
-    is.na(group) |
-      is.na(coverage) |
-      is.na(births_2022)
-  ) %>%
-  distinct(iso3,OfficialName)
-
-
-# ---- 6. Filter for valid countries with complete data ----
-
-df_final <- df_merge %>%
-  select(-country) %>% 
-  filter(
-    !is.na(group),
-    !is.na(coverage),
-    !is.na(births_2022)
-    ) %>% 
-  rename(country=OfficialName) %>% 
-  relocate(country, iso3)
-  
-
-
 # ---- 5. Save outputs ----
 
 # Save as CSV and RDS
-write_csv(excluded_countries, file.path(dir_clean, "excluded_countries.csv"), col_names = FALSE)
-saveRDS(excluded_countries, file.path(dir_clean, "excluded_countries.rds"))
 write_csv(df_final, file.path(dir_clean, "cleaned_data.csv"))
 saveRDS(df_final, file.path(dir_clean, "cleaned_data.rds"))
 
