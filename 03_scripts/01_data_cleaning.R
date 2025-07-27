@@ -75,17 +75,21 @@ excluded_countries <- df_merge %>%
 # ---- 6. Filter for valid countries with complete data ----
 
 df_final <- df_merge %>%
+  select(-country) %>% 
   filter(
     !is.na(group),
     !is.na(coverage),
     !is.na(births_2022)
-  )
+    ) %>% 
+  rename(country=OfficialName) %>% 
+  relocate(country, iso3)
+  
 
 
 # ---- 5. Save outputs ----
 
 # Save as CSV and RDS
-write_csv(excluded_countries, file.path(dir_out, "excluded_countries.csv"), col_names = FALSE)
-write_csv(df_final, file.path(dir_out, "cleaned_data.csv"))
-saveRDS(df_final, file.path(dir_out, "cleaned_data.rds"))
+write_csv(excluded_countries, file.path(dir_clean, "excluded_countries.csv"), col_names = FALSE)
+write_csv(df_final, file.path(dir_clean, "cleaned_data.csv"))
+saveRDS(df_final, file.path(dir_clean, "cleaned_data.rds"))
 
