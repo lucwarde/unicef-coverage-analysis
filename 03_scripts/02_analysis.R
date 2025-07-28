@@ -12,8 +12,16 @@ df_merge <- readRDS(file.path(dir_clean, "cleaned_data.rds"))
 
 ## ---- Save excluded countries (missing data or group) ----
 excluded_countries <- df_merge %>%
-  filter(is.na(group) | is.na(coverage) | is.na(births_2022)) %>%
-  distinct(iso3, OfficialName)
+  group_by(iso3, OfficialName) %>%
+  summarise(
+    group_missing = all(is.na(group)),
+    births_missing = all(is.na(births_2022)),
+    coverage_missing = all(is.na(coverage)),
+    fully_excluded = group_missing | births_missing | coverage_missing,
+    .groups = "drop"
+  ) %>%
+  filter(fully_excluded) %>%
+  select(iso3, OfficialName)
 
 ## ---- Filter for valid countries with complete data ----
 df_final <- df_merge %>%
@@ -21,6 +29,7 @@ df_final <- df_merge %>%
   filter(!is.na(group), !is.na(coverage), !is.na(births_2022)) %>%
   rename(country = OfficialName) %>%
   relocate(country, iso3)
+
 
 
 
@@ -113,12 +122,20 @@ top10_anc4 <- df_final_wide %>%
   slice_head(n = 10) %>%
   select(iso3, country, group, anc4_coverage)
 
+# Create top 10 list of countries with lowest combined ANC4 + SBA coverage
+df_top10_combined <- df_final_wide %>%
+  filter(!is.na(anc4_coverage), !is.na(sba_coverage)) %>%
+  mutate(mean_score = (anc4_coverage + sba_coverage) / 2) %>%
+  arrange(mean_score) %>%
+  slice_head(n = 10) %>%
+  select(country, group, anc4_coverage, sba_coverage)
+
+
+
 
 # ---- 5. Save outputs (no header) ----
 
-# Save group-level results
-write_csv(results_group, file.path(dir_output, "coverage_results_by_group.csv"), col_names = FALSE)
-saveRDS(results_group, file.path(dir_output, "coverage_results_by_group.rds"))
+
 
 
 # ---- 7. Reshape for Visualisation ----
@@ -133,20 +150,23 @@ saveRDS(results_country, file.path(dir_output, "coverage_results_by_country.rds"
 
 
 
-# ---- 8. Export----
+# ---- 8. Save outputs ----
 
-write_csv(summary_group, file.path(dir_output, "coverage_summary_group.csv"), col_names = TRUE)
 saveRDS(summary_group, file.path(dir_output, "coverage_summary_group.rds"))
 
-write_csv(results_group, file.path(dir_output, "coverage_results_by_group.csv"), col_names = FALSE)
-write_csv(results_country, file.path(dir_output, "coverage_results_by_country.csv"), col_names = FALSE)
+
 saveRDS(results_group, file.path(dir_output, "coverage_results_by_group.rds"))
 saveRDS(results_country, file.path(dir_output, "coverage_results_by_country.rds"))
 
 
-write_csv(top10_anc4, file.path(dir_output, "top10_anc4.csv"))
 saveRDS(top10_anc4, file.path(dir_output, "top10_anc4.rds"))
+saveRDS(df_top10_combined, file.path(dir_output, "top10_combined_coverage.rds"))
 
 saveRDS(df_long, file.path(dir_output, "coverage_long_data.rds"))
+saveRDS(df_final_wide, file.path(dir_output, "coverage_wide_data.rds"))
+write_csv(df_long, file.path(dir_output, "df_long.csv"), col_names = TRUE)
+write_csv(df_final_wide, file.path(dir_output, "df_final_wide.csv"), col_names = TRUE)
+
+
 
 
