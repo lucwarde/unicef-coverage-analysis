@@ -44,12 +44,17 @@ df_long <- df_long %>%
   ))
 ```
 
-> **About this Submission**\
-> This technical report supports the application to the following UNICEF D&A consultancy positions:\
->   – Learning and Skills Data Analyst Consultant (#581598)\
->   – Household Survey Data Analyst Consultant (#581656)\
->   – Administrative Data Analyst Consultant (#581696)\
->   – Microdata Harmonization Consultant (#581699)
+> **About this Submission**
+>
+> This technical report supports the application to the following UNICEF D&A consultancy positions:
+>
+> -   Learning and Skills Data Analyst Consultant (#581598)
+>
+> -   Household Survey Data Analyst Consultant (#581656)
+>
+> -   Administrative Data Analyst Consultant (#581696)
+>
+> -   Microdata Harmonization Consultant (#581699)
 
 # 1. Context, Objectives and Methodology
 
@@ -101,12 +106,17 @@ This classification provides a framework to assess how service coverage aligns w
 
 ------------------------------------------------------------------------
 
-> **Data Sources and Limitations**\
+> **Data Sources and Limitations**
+>
+> \
 > - **Date of extraction and processing**: July 2025\
-> - **Inputs**:\
->   - ANC4 and SBA indicators from the [UNICEF Global Data Repository](https://data.unicef.org/resources/data_explorer/unicef_f/?ag=UNICEF&df=GLOBAL_DATAFLOW&ver=1.0&dq=.MNCH_ANC4+MNCH_SAB.&startPeriod=2018&endPeriod=2022)\
->   - Birth projections from the *UN World Population Prospects 2022*\
->   - U5MR groupings from UNICEF’s official classification
+> - **Inputs**:
+>
+> -   ANC4 and SBA indicators from the [UNICEF Global Data Repository](https://data.unicef.org/resources/data_explorer/unicef_f/?ag=UNICEF&df=GLOBAL_DATAFLOW&ver=1.0&dq=.MNCH_ANC4+MNCH_SAB.&startPeriod=2018&endPeriod=2022)
+>
+> -   Birth projections from the *UN World Population Prospects 2022*
+>
+> -   U5MR groupings from UNICEF’s official classification
 >
 > Several countries were **excluded or only partially included** due to missing data (e.g., births, U5MR status, ANC4 or SBA coverage).\
 > These limitations were accounted for in the weighted analysis and are examined in detail in **Section 2.2 on data completeness**.
@@ -182,13 +192,17 @@ ggplot(df_completeness, aes(x = indicator, y = pct, fill = completeness)) +
   theme_minimal(base_size = 13)
 ```
 
-**Interpretation**\
--   Over 60% of on-track countries lack ANC4 data, weakening group-level reliability.
--   SBA data is nearly complete, enabling stronger comparisons.
--   *`r pct_excluded`%* of countries were fully excluded due to missing group, births, or both indicators.
--   Others were partially included, lacking ANC4 but contributing SBA data — highlighting antenatal reporting gaps.
--   The table below outlines missing data patterns to guide data system improvements.
+**Interpretation**
 
+-   Over 60% of on-track countries lack ANC4 data, weakening group-level reliability.
+
+-   SBA data is nearly complete, enabling stronger comparisons.
+
+-   *`r pct_excluded`%* of countries were fully excluded due to missing group, births, or both indicators.
+
+-   Others were partially included, lacking ANC4 but contributing SBA data — highlighting antenatal reporting gaps.
+
+-   The table below outlines missing data patterns to guide data system improvements.
 
 ```{r exclusion-summary-table}
 excluded_summary %>%
