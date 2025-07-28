@@ -1,111 +1,83 @@
-# Test for Consultancy with the D&A Education Team
+# UNICEF D&A Consultancy Assessment – ANC4 and SBA Coverage Analysis
 
-This repository contains the tasks for the **UNICEF Data and Analytics technical evaluation** for education.
+This repository contains the full workflow developed as part of the technical assessment for the following UNICEF consultancy positions:
 
-------------------------------------------------------------------------
-
-## 📋 General Instructions
-
--   Please **clone this repository** to your local computer. Once complete, **push your work to your own GitHub repository** and share the link.
-
--   To preserve your anonymity:
-
-    -   ❌ Do **not fork** this repository
-    -   ❌ Do **not include your name** anywhere in the submitted assessment
-
--   Please respect the **confidential nature of this test** and **do not share or discuss** its content with others.
-
--   Please add the **positions you applied for** in the final output and your readme. Please **do not include your name**.
-
--   The focus of this test is to assess:
-
-    -   ✅ How you **structure your workflow and code**
-    -   ✅ Your **proficiency in collaborative work environments**
-    -   ✅ Your **commitment to reproducible research practices**
-
--   The **final code and results** must be uploaded to your GitHub repository. Your code should:
-
-    -   📌 Be **well-documented**
-    -   ⚙️ Be **ready for automated execution**
-    -   📂 Follow best practices in **version control and coding standards**
-
--   You may use **R, Python, or Stata**.
-
--   **Estimated completion time**: 4 hours
-
--   ⏱️ **You have 48 hours** to complete the assessment and share back your GitHub repository link. Commits made **after 48 hours** will not be considered for evaluation.
+-   Learning and Skills Data Analyst Consultant (#581598)\
+-   Household Survey Data Analyst Consultant (#581656)\
+-   Administrative Data Analyst Consultant (#581696)\
+-   Microdata Harmonization Consultant (#581699)
 
 ------------------------------------------------------------------------
 
-## 🗂️ Exercise Overview
+## 🧭 Project Structure
 
-### 1. Set up your GitHub repository and workflow
-
-Create a **well-structured repository** with the following:
-
--   📁 **Folder structure**: Reflect an end-to-end workflow with clear organization that supports reproducibility (e.g., `data`, `documentation`, `scripts`, etc.)
-
--   📝 **README file**:
-
-    -   Describe the **structure** of your repository
-    -   Explain the **purpose** of each folder and file
-    -   Include **instructions** on how to reproduce your analysis
-
--   🧩 In the **main directory**, include the following scripts:
-
-    -   `user_profile`: A script or configuration file that ensures your code can run on **any machine**
-    -   `run_project`: A script that executes your **workflow end-to-end**, producing the final output (**PDF, HTML, or DOCX report**)
+```         
+├── 01_rawdata/           # Raw input files: coverage, births, classification
+├── 02_cleaned/           # Cleaned and merged intermediate datasets
+├── 03_scripts/           # Main R scripts for cleaning, analysis, and reporting
+├── 04_output/            
+│   ├── 01_report_output/ # Final HTML/PDF/Word reports
+│   └── 02_data_output/   # Saved processed data objects (RDS)
+├── 05_documents/         # Supporting documents (metadata, notes, README)
+├── user_profile.R        # Centralized environment: paths, packages, settings
+├── run_project.R         # Master script to run the full pipeline
+└── README.md             # Project overview (this file)
+```
 
 ------------------------------------------------------------------------
 
-## 🩺 Task
+## 🚀 How to Run the Project
 
-You are required to **calculate the population-weighted coverage** of two health services:
+1.  Clone the repository locally.
+2.  Open the RStudio project.
+3.  Run the main script:
 
--   **Antenatal care (ANC4)**: % of women (aged 15–49) with at least 4 antenatal care visits
--   **Skilled birth attendance (SBA)**: % of deliveries attended by skilled health personnel
+``` r
+source("run_project.R")
+```
 
-for countries categorized as **on-track** or **off-track** in achieving under-five mortality targets (as of 2022).
+This will:
 
-------------------------------------------------------------------------
+\- Load all required packages and paths via `user_profile.R`
 
-## 📊 Data Sources
+\- Clean and merge input data (`01_data_cleaning.R`)
 
--   **Retrieve the following indicators** from the UNICEF Global Data Repository [`LINK`](https://data.unicef.org/resources/data_explorer/unicef_f/?ag=UNICEF&df=GLOBAL_DATAFLOW&ver=1.0&dq=.MNCH_ANC4+MNCH_SAB.&startPeriod=2018&endPeriod=2022) at the country level for the years **2018–2022**:
+\- Compute weighted stats and prepare outputs (`02_analysis.R`) - Generate the final report in **HTML**, **PDF**, and **Word** (`03_report.Rmd`)
 
-    -   **ANC4**: % of women (aged 15–49) with at least 4 antenatal care visits
-    -   **SBA**: % of deliveries attended by skilled health personnel
-
--   Use the following additional files:
-
-    -   📈 **Population Data**: UN World Population Prospects, 2022\
-        *File: `WPP2022_GEN_F01_DEMOGRAPHIC_INDICATORS_COMPACT_REV1.xlsx` (located in `01_rawdata/`)*
-
-    -   **Under-five mortality classification**:
-
-        -   On-track if `Status.U5MR` is `"achieved"` or `"on-track"`
-        -   Off-track if `Status.U5MR` is `"acceleration needed"`\
-            *File: `On-track and off-track countries.xlsx`*
+> ❗ **PDF rendering issues with block quotes**\
+> If the LaTeX compilation fails due to block quote compatibility, you can temporarily disable PDF rendering by commenting out `output_format = "all"` and using HTML only, as shown in the alternate block in `run_project.R`.
 
 ------------------------------------------------------------------------
 
-## 🧪 Steps to Follow
+## 🧾 Data Sources
 
-### 1. Data Preparation
+-   **Coverage indicators** (ANC4, SBA):\
+    [UNICEF Global Data Repository](https://data.unicef.org/resources/data_explorer/unicef_f/?ag=UNICEF&df=GLOBAL_DATAFLOW&ver=1.0&dq=.MNCH_ANC4+MNCH_SAB.&startPeriod=2018&endPeriod=2022)
 
--   Clean and merge all datasets using **consistent country identifiers**
--   For ANC4 and SBA, **filter for coverage estimates from 2018 to 2022**
-    -   Use the **most recent estimate** within this range per country
+-   **Under-five mortality classification**:\
+    [UNICEF U5MR Overview](https://data.unicef.org/topic/child-survival/under-five-mortality/)
 
-### 2. Calculate Population-Weighted Coverage
+-   **Birth estimates**:\
+    *UN World Population Prospects 2022*
 
--   For each group (**on-track** and **off-track**), calculate **population-weighted averages** for ANC4 and SBA
--   Use **projected births for 2022** as weights
+-   **Indicator metadata**:
 
-### 3. Reporting
-
--   Create a **PDF / HTML / DOCX report** including:
-    -   📉 A **visualization** comparing coverage for on-track vs. off-track countries
-    -   🧾 A short paragraph **interpreting the results**, highlighting any caveats or assumptions
+    -   [ANC4 – WHO](https://www.who.int/data/gho/indicator-metadata-registry/imr-details/80)\
+    -   [SBA – WHO](https://data.who.int/indicators/i/F835E3B/1772666)\
+    -   [SDG 3.1.1 – Maternal Mortality](https://unstats.un.org/sdgs/metadata/files/Metadata-03-01-01.pdf)\
+    -   [SDG 3.1.2 – Skilled Birth Attendance](https://unstats.un.org/sdgs/metadata/files/Metadata-03-01-02.pdf)\
+    -   [SDG 3.2.1 – Under-Five Mortality](https://unstats.un.org/sdgs/metadata/files/Metadata-03-02-01.pdf)\
+    -   [SDG 3.2.2 – Neonatal Mortality](https://unstats.un.org/sdgs/metadata/files/Metadata-03-02-02.pdf)
 
 ------------------------------------------------------------------------
+
+## 🔧 Requirements
+
+-   R ≥ 4.1
+-   Required packages (automatically loaded in `user_profile.R`): `tidyverse`, `knitr`, `kableExtra`, `rmarkdown`, `scales`, `plotly`
+
+------------------------------------------------------------------------
+
+## 📬 Contact
+
+This repository was prepared as part of a technical assessment and should not include author names as per submission instructions.
