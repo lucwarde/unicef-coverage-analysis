@@ -38,14 +38,26 @@ source("run_project.R")
 
 This will:
 
-\- Load all required packages and paths via `user_profile.R`
+1. Load all required packages and paths via `user_profile.R`
+2. Clean and merge input data (`01_data_cleaning.R`)
+3. Compute weighted stats and prepare outputs (`02_analysis.R`) 
+4. Generate the final report in **HTML**, **PDF**, and **Word** (`03_report.Rmd`) into `/04_output/01_report_output/`
 
-\- Clean and merge input data (`01_data_cleaning.R`)
-
-\- Compute weighted stats and prepare outputs (`02_analysis.R`) - Generate the final report in **HTML**, **PDF**, and **Word** (`03_report.Rmd`)
-
+> ✅ **HTML output is prioritized** for best viewing experience (e.g. tooltips, zoomable plots). 
 > ❗ **PDF rendering issues with block quotes**\
 > If the LaTeX compilation fails due to block quote compatibility, you can temporarily disable PDF rendering by commenting out `output_format = "all"` and using HTML only, as shown in the alternate block in `run_project.R`.
+
+------------------------------------------------------------------------
+
+## 🧭 Report Content
+
+The report includes:
+
+- Methodology and data sources
+- Group-level ANC4 and SBA coverage
+- Completeness diagnostics and data quality caveats
+- Country-level performance, including low-performers
+- Interpretation of findings and strategic recommendations
 
 ------------------------------------------------------------------------
 
