@@ -1,14 +1,18 @@
 ---
-title: "ANC4 and SBA Coverage Report"
-author: "UNICEF D&A Education Team"
+title: "UNICEF Coverage Report: Antenatal Care and Skilled Birth Attendance (2018–2022)"
+author: "UNICEF D\\&A Education Team"
 output:
   html_document:
     toc: true
     toc_float: true
+    theme: cerulean  
+    highlight: tango
+    df_print: paged
   pdf_document:
     latex_engine: xelatex
     keep_tex: true
   word_document: default
+always_allow_html: true
 ---
 
 ```{r setup, include=FALSE}
@@ -21,48 +25,103 @@ library(plotly)
 library(scales)
 library(knitr)
 library(kableExtra)
+library(sf)
+library(rnaturalearth)
 ```
 
 ```{r load-data}
 
-df_group <- readRDS(file.path(dir_output, "coverage_results_by_group.rds"))
-df_country <- readRDS(file.path(dir_output, "coverage_results_by_country.rds"))
-df_summary <- readRDS(file.path(dir_output, "coverage_summary_group.rds"))
-df_top10 <- readRDS(file.path(dir_output, "top10_anc4.rds"))
-df_long <- readRDS(file.path(dir_output, "coverage_long_data.rds"))
+df_group <- readRDS(file.path(dir_data_output, "coverage_results_by_group.rds"))
+df_country <- readRDS(file.path(dir_data_output, "coverage_results_by_country.rds"))
+df_summary <- readRDS(file.path(dir_data_output, "coverage_summary_group.rds"))
+df_top10_combined <- readRDS(file.path(dir_data_output, "top10_combined_coverage.rds"))
+df_top10 <- readRDS(file.path(dir_data_output, "top10_anc4.rds"))
+df_long <- readRDS(file.path(dir_data_output, "coverage_long_data.rds"))
 
 # Update indicator labels
 df_long <- df_long %>%
   mutate(indicator = recode(indicator,
-    anc4_coverage = "ANC4: ≥4 Antenatal Care Visits",
+    anc4_coverage = "ANC4: 4+ Antenatal Care Visits",
     sba_coverage  = "SBA: Skilled Birth Attendance"
   ))
 ```
 
-# 1. Context and Purpose
+> **About this Submission**\
+> This technical report supports the application to the following UNICEF D&A consultancy positions:\
+> – Learning and Skills Data Analyst Consultant (#581598)\
+> – Household Survey Data Analyst Consultant (#581656)\
+> – Administrative Data Analyst Consultant (#581696)\
+> – Microdata Harmonization Consultant (#581699)
+
+# 1. Context, Objectives and Methodology
 
 ------------------------------------------------------------------------
 
-> **This Report**\
-> This technical note summarizes ANC4 and SBA coverage across UNICEF-focus countries. Countries are grouped as *on-track* or *off-track* based on under-five mortality status (U5MR), aligned with SDG 3.2. Indicators analyzed reflect maternal care continuum, essential to SDG 3.1 and child survival.
+> **About this Report**\
+> This technical note summarizes coverage of maternal health services across UNICEF-focus countries. Countries are classified as **on-track** or **off-track** based on under-five mortality status (U5MR), aligned with **SDG 3.2**. The indicators analyzed — ANC4 and SBA — are key components of the maternal care continuum and contribute to the achievement of **SDG 3.1**.
 
 ------------------------------------------------------------------------
 
-This report evaluates maternal health service coverage in countries classified as **on-track** or **off-track** based on **under-five mortality rate (U5MR)**:
+### Context
 
--   **On-track**: U5MR status is "achieved" or "on-track"
--   **Off-track**: U5MR status is "acceleration needed"
+Reducing **under-five mortality** remains a global priority — particularly in countries where maternal health services are limited or inequitable. To assess readiness and identify service gaps, UNICEF monitors two critical indicators of maternal care:
 
-We analyze two indicators from UNICEF's maternal health framework:
+-   **ANC4**: Percentage of women (aged 15–49) receiving at least **four antenatal care visits**.
+-   **SBA**: Percentage of births attended by **skilled health personnel**.
 
--   **ANC4**: % of women (aged 15–49) with **≥4 antenatal care visits**
--   **SBA**: % of deliveries attended by **skilled health personnel**
+These indicators reflect **early engagement** in pregnancy and **safe delivery**, both essential to reducing maternal and neonatal mortality. Together, they form a core part of the continuum of care.
 
-These indicators are strong predictors of maternal and child survival. Low coverage levels often correlate with higher neonatal and child mortality.
+To contextualize coverage performance, countries are grouped using the latest **under-five mortality rate (U5MR) classification**:
 
-# 2. Summary Statistics by Group
+-   **On-track**: U5MR is *achieved* or *on-track* to meet **SDG target 3.2**.
+-   **Off-track**: U5MR status is *acceleration needed*.
 
-## Group-Level Weighted Coverage and Missingness
+This classification provides a framework to assess how service coverage aligns with child survival progress and helps inform areas where additional attention may be needed to meet **SDG target 3.2** on ending preventable child deaths.
+
+------------------------------------------------------------------------
+
+### Methodology
+
+#### 1. Data Preparation
+
+-   **ANC4** and **SBA** coverage data were retrieved from the\
+    [UNICEF Global Data Repository](https://data.unicef.org/resources/data_explorer/unicef_f/?ag=UNICEF&df=GLOBAL_DATAFLOW&ver=1.0&dq=.MNCH_ANC4+MNCH_SAB.&startPeriod=2018&endPeriod=2022)\
+    for all available countries between **2018 and 2022**.
+-   For each country, the **most recent coverage estimate** within this period was retained.
+-   **Under-five mortality classification** (on-track / off-track) was assigned using the\
+    file `On-track and off-track countries.xlsx`, based on U5MR status:
+    -   *On-track* = “achieved” or “on-track”
+    -   *Off-track* = “acceleration needed”
+-   All datasets were merged using standardized **ISO3 country codes**.
+
+#### 2. Population-Weighted Averages
+
+-   **Birth projections for 2022** were sourced from the UN World Population Prospects:\
+    `WPP2022_GEN_F01_DEMOGRAPHIC_INDICATORS_COMPACT_REV1.xlsx`.
+-   For each group (on-track and off-track), **weighted means** were computed for ANC4 and SBA using birth counts as weights.
+-   Countries with missing coverage data were excluded from group-level weighted statistics.
+
+------------------------------------------------------------------------
+
+> **Data Sources and Limitations**\
+> - **Date of extraction and processing**: July 2025\
+> - **Inputs**:\
+> - ANC4 and SBA indicators from the [UNICEF Global Data Repository](https://data.unicef.org/resources/data_explorer/unicef_f/?ag=UNICEF&df=GLOBAL_DATAFLOW&ver=1.0&dq=.MNCH_ANC4+MNCH_SAB.&startPeriod=2018&endPeriod=2022)\
+> - Birth projections from the *UN World Population Prospects 2022*\
+> - U5MR groupings from UNICEF’s official classification
+>
+> Several countries were **excluded or only partially included** due to missing data (e.g., births, U5MR status, ANC4 or SBA coverage).\
+> These limitations were accounted for in the weighted analysis and are examined in detail in **Section 2.2 on data completeness**.
+
+------------------------------------------------------------------------
+
+# 2. Analysis of Coverage and Gaps
+
+This section presents group-level and country-level results for ANC4 and SBA coverage, highlighting disparities, data quality issues, and patterns relevant for maternal health programming.
+
+------------------------------------------------------------------------
+
+### 2.1 Summary coverage statistics by group
 
 ```{r}
 df_summary %>%
@@ -77,25 +136,70 @@ df_summary %>%
   kable_styling(full_width = F, bootstrap_options = c('striped', 'hover'))
 ```
 
+**Interpretation**\
+This table shows the average ANC4 and SBA coverage for on-track and off-track countries, along with the number of countries and missing values.
+
+Key insights include: - SBA coverage is consistently high across both groups. - ANC4 coverage is lower and more variable, especially in off-track countries. - Over 60% of on-track countries have no ANC4 data, limiting comparability.
+
 ------------------------------------------------------------------------
 
-# 3. Countries with Lowest ANC4 Coverage
+### 2.2 Data completeness by indicator
 
-```{r}
-df_top10 %>%
-  mutate(anc4_coverage = round(anc4_coverage, 1)) %>%
-  arrange(anc4_coverage) %>%
-  rename(`ANC4 Coverage (%)` = anc4_coverage, Group = group, Country = country) %>%
-  kable(caption = "Top 10 Countries with Lowest ANC4 Coverage") %>%
-  kable_styling(full_width = F, bootstrap_options = c('striped', 'hover'))
+```{r data-completeness-stackedbar}
+
+# % of countries excluded from final analysis
+pct_excluded <- round(
+  100 * (excluded_countries %>% distinct(iso3) %>% nrow()) /
+    ((excluded_countries %>% distinct(iso3) %>% nrow()) +
+       (df_merge %>% distinct(iso3) %>% nrow())),
+  1
+)
+
+
+df_completeness <- df_country %>%
+  pivot_longer(cols = c(anc4_weighted, sba_weighted), names_to = "indicator", values_to = "value") %>%
+  mutate(
+    indicator = recode(indicator,
+                       anc4_weighted = "ANC4",
+                       sba_weighted  = "SBA"),
+    completeness = ifelse(is.na(value), "Missing", "Available")
+  ) %>%
+  count(group, indicator, completeness) %>%
+  group_by(group, indicator) %>%
+  mutate(pct = 100 * n / sum(n))
+
+ggplot(df_completeness, aes(x = indicator, y = pct, fill = completeness)) +
+  geom_bar(stat = "identity", position = "stack") +
+  facet_wrap(~ group) +
+  scale_fill_manual(
+    values = c("Missing" = "#DBB0AD", "Available" = "#ADCEDB")
+  ) +
+  scale_y_continuous(labels = label_percent(scale = 1)) +
+  labs(
+    title = "Data Completeness for ANC4 and SBA by Group",
+    y = "Percentage of Countries",
+    x = "Indicator",
+    fill = "Data Availability"
+  ) +
+  theme_minimal(base_size = 13)
 ```
 
-> **Next Steps**\
-> These insights can support planning for technical assistance, targeted country engagement, and advocacy for maternal health investments.
+**Interpretation**\
+- Over 60% of on-track countries lack ANC4 data, weakening group-level reliability.\
+- SBA data is nearly complete, enabling stronger comparisons.\
+- *`r pct_excluded`%* of countries were fully excluded due to missing group, births, or both indicators.\
+- Others were partially included, lacking ANC4 but contributing SBA data — highlighting antenatal reporting gaps.\
+- The table below outlines missing data patterns to guide data system improvements.
+
+```{r exclusion-summary-table}
+excluded_summary %>%
+  kable(caption = sprintf("Missing data patterns")) %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
+```
 
 ------------------------------------------------------------------------
 
-# 4. Interactive Coverage by Country and Indicator
+### 2.3 Country-Level coverage: interactive view
 
 ```{r}
 plot_interactive <- ggplot(df_long, aes(x = reorder(country, coverage), y = coverage,
@@ -120,13 +224,19 @@ plot_interactive <- ggplot(df_long, aes(x = reorder(country, coverage), y = cove
 ggplotly(plot_interactive, tooltip = "text")
 ```
 
-**Interpretation** This graph highlights how **ANC4 and SBA coverage differ between on-track and off-track countries**. While **SBA coverage is generally high** across all countries, **ANC4 coverage shows greater variation**, particularly in off-track countries. Some countries demonstrate **a clear disconnect** between the two indicators — high coverage at delivery but insufficient antenatal engagement.
+**Interpretation**\
+This graph highlights the contrast between **ANC4** and **SBA** coverage by country group:
 
-Notably, in off-track countries, ANC4 tends to **cluster below 60%**, whereas SBA often approaches or exceeds 80%. This suggests that **interventions for delivery care have outpaced antenatal service uptake**, which can compromise both maternal and neonatal outcomes.
+-   **SBA coverage** is consistently high, with most countries reaching or exceeding **80%**.
+-   **ANC4 coverage**, however, is more variable — particularly in *off-track* countries, where it often falls **below 60%**.
+
+➡️ *See Section 2.4 for summary distributions.*
+
+> **Note**: Best viewed in HTML for tooltip interactivity.
 
 ------------------------------------------------------------------------
 
-# 5. Coverage Distribution by Group
+### 2.4 Coverage distribution by group
 
 ```{r}
 ggplot(df_long, aes(x = indicator, y = coverage, fill = group)) +
@@ -142,80 +252,130 @@ ggplot(df_long, aes(x = indicator, y = coverage, fill = group)) +
   theme_minimal(base_size = 13)
 ```
 
-**Interpretation** This distribution plot shows the **range and central tendency** of ANC4 and SBA coverage by country group. The **median SBA is high** for both groups, while **ANC4 coverage is lower and more dispersed**, especially in off-track settings. On-track countries appear to perform slightly better in ANC4, but many are missing data, as noted earlier.
+**Interpretation**\
+This distribution plot shows the **range and central tendency** of ANC4 and SBA coverage by country group. The **median SBA is high** for both groups, while **ANC4 coverage is lower and more dispersed**, especially in off-track settings. On-track countries appear to perform slightly better in ANC4, but many are missing data, as noted earlier.
 
 The wider spread in ANC4 for off-track countries also highlights **greater inequality in antenatal care access**, pointing to **potential structural or systemic challenges** in reaching women early in pregnancy.
 
-> **Read Note:**\
-> While SBA coverage is generally strong, this should not obscure gaps in antenatal care.\
-> **ANC4 is essential** for screening complications, educating mothers, and ensuring timely interventions.\
-> High SBA without ANC4 is not a substitute for comprehensive maternal care.
+------------------------------------------------------------------------
+
+### 2.5 ANC4 vs SBA Scatterplot
+
+```{r scatter-anc4-sba}
+ggplot(df_country, aes(
+  x = anc4_weighted,
+  y = sba_weighted,
+  color = group,
+  label = country
+)) +
+  geom_point(size = 3, alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE, linetype = "dashed", color = "grey50") +
+  scale_x_continuous(name = "ANC4 Coverage (%)", limits = c(0, 100), labels = label_percent(scale = 1)) +
+  scale_y_continuous(name = "SBA Coverage (%)", limits = c(0, 100), labels = label_percent(scale = 1)) +
+  labs(
+    title = "ANC4 vs SBA Coverage by Country",
+    subtitle = "Each point represents a country",
+    color = "Group"
+  ) +
+  theme_minimal(base_size = 13)
+```
+
+**Interpretation**\
+This scatterplot highlights the relationship between ANC4 and SBA coverage across countries. While many countries show a positive correlation, a significant cluster of off-track countries exhibit high SBA coverage but low ANC4, indicating that women are receiving delivery care without adequate antenatal follow-up.
 
 ------------------------------------------------------------------------
 
-# 6. Interpretation
+> **Key Summary Insight (applies across Sections 2.1–2.5):**\
+> **SBA coverage is consistently strong**, indicating widespread access to delivery care. In contrast, **ANC4 coverage remains limited or missing**, especially in off-track countries and many on-track countries. This imbalance reveals critical gaps in early maternal engagement and system continuity.
 
-### Differences Between On-Track and Off-Track Countries
+------------------------------------------------------------------------
 
-UNICEF classifies countries based on **under-five mortality (U5MR)** into:
+### 2.6 Countries with lowest ANC4 coverage
 
--   **On-track**: U5MR is *achieved* or *on-track* to meet SDG 3.2
--   **Off-track**: U5MR status is *acceleration needed*
+```{r}
+df_top10_combined %>%
+  rename(
+    `ANC4 Coverage (%)` = anc4_coverage,
+    `SBA Coverage (%)`  = sba_coverage,
+    Group = group,
+    Country = country
+  ) %>%
+  kable(caption = "Top 10 Countries with Lowest Combined ANC4 and SBA Coverage") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c('striped', 'hover'))
+```
 
-When comparing these classifications with ANC4 and SBA indicators:
+> These countries face compounded vulnerabilities in both antenatal and delivery services. Addressing gaps in the full maternal health continuum is essential for reducing preventable maternal and neonatal deaths.
 
-| Metric | On-Track Countries | Off-Track Countries |
-|------------------|--------------------------|----------------------------|
+------------------------------------------------------------------------
+
+# 3. Interpretation
+
+The results highlights **strong skilled birth attendance (SBA)** across all countries, but also reveals **significant challenges with antenatal care coverage (ANC4)**, particularly in **off-track countries** and in **on-track countries** where data is missing or incomplete. This imbalance raises concerns about the **continuity of maternal care**, a key element for achieving **SDG targets 3.1 and 3.2**.
+
+#### **Coverage comparison by country group**
+
+| **Metric** | **On-Track Countries** | **Off-Track Countries** |
+|--------------------|------------------------|----------------------------|
 | **SBA coverage** | High, with little variation | Also high and relatively stable |
 | **ANC4 coverage** | More heterogeneous | Often low, typically \< 60% |
 | **ANC4 data completeness** | Poor: \~60% of countries missing | Good: Nearly all countries reported |
 
-### Key Patterns:
+> These results suggest that while many women receive skilled support during delivery, antenatal engagement remains limited in several contexts — either due to insufficient coverage or the absence of reliable data.
 
--   **Skilled birth attendance (SBA)** is consistently high across both groups, suggesting delivery-level interventions are well integrated.
--   **ANC4** (antenatal care) shows serious gaps:
-    -   **Off-track countries** have data, but it often reveals *critical access failures*.
-    -   **On-track countries** have *insufficient data*, limiting visibility on service quality.
+### **Why is ANC4 Low or Missing?**
 
-### Countries Requiring Immediate Attention
+ANC4 is inherently **more difficult to capture and deliver** than SBA. Unlike delivery, which is a single event often occurring in a facility, ANC4 requires **multiple visits**, spread over months. Several factors contribute to low uptake or missing data:
 
-The **lowest ANC4 performers** include:
+-   **Economic barriers** (e.g., transport costs, informal fees)
+-   **Time constraints** (especially for women with household or work responsibilities)
+-   **Distance and infrastructure**
+-   **Lack of awareness or trust in health systems**
 
-**Somalia, Afghanistan, South Sudan, Senegal, Niger**, among others — all with **ANC4 coverage under 50%**.
+> In contrast, SBA, a one-time event, is easier to track and often better integrated into health systems.
 
-Some also show **high SBA but low ANC4**, revealing a troubling pattern: women often access skilled delivery, but **miss the entire prenatal window** — a breakdown in care continuity with serious risks for mothers and newborns.
+Several of the **lowest-performing countries** , including *Somalia, South Sudan, Niger, Central African Republic*, and *Afghanistan* — report **ANC4 and SBA coverage both below 50%**. These countries represent **critical gaps in maternal care** that affect both early and delivery-stage interventions. Others, such as *Senegal* and *Mauritania*, show **moderate SBA coverage but extremely low ANC4 uptake**, pointing to a **breakdown in continuity of care** during pregnancy. All countries in this list are **off-track** in under-five mortality, reinforcing the urgency of targeted action.
 
 ------------------------------------------------------------------------
 
-# 7. Recommendations
+# 4 Strategic Recommendations
 
-Improving maternal health coverage requires **targeted strategies by country group**, alongside system-wide improvements.
+#### **For On-Track Countries**
 
-### For On-Track Countries
+-   **Close the ANC4 data gap**:
+    -   Improve antenatal data availability through routine health information systems and survey coverage.
+    -   When unavailable, triangulate ANC4 estimates using facility, insurance, or digital health records.
+-   **Ensure quality beyond SBA**:
+    -   Validate success with maternal care: High SBA alone isn’t sufficient. Without ANC4, risks remain high. Ensure “on-track” status includes quality and continuity of care.
 
-**Close the data gap**: - Prioritize **ANC4 data collection** through strengthened HMIS and improved survey coordination. - Where ANC4 is missing, **triangulate** from facility, insurance, or digital health data to estimate coverage.
+#### **For Off-Track Countries**
 
-**Validate success with maternal care**: - High SBA alone isn’t sufficient. Without ANC4, risks remain high. Ensure “on-track” status includes quality and continuity of care.
+-   **Invest in antenatal access**:
+    -   Address **geographic, economic, and sociocultural barriers** to early pregnancy care.\
+    -   Use **mobile clinics, community health workers**, and local outreach to reach underserved women.
+    -   *Note: Countries with both low ANC4 and SBA (e.g., **Somalia**, **South Sudan**, **Niger**, **CAR**) require foundational investment in access and coverage.*
+-   **Correct the care imbalance**:
+    -   In countries with high SBA but low ANC4 (e.g., **Senegal**, **Mauritania**), encourage early pregnancy contact through targeted interventions and communication strategies.
 
-### For Off-Track Countries
+#### **For All Countries**
 
-**Invest in access and equity**: - Target **geographic, financial, and cultural barriers** to antenatal care. - Integrate ANC outreach with community health and mobile health campaigns.
+-   **Enhance equity and targeting**:
+    -   Disaggregate ANC4/SBA coverage by **age, location, wealth, and parity** to uncover hidden gaps.
+-   **Institutionalize annual monitoring**:
+    -   Align ANC4/SBA tracking with DHS/MICS cycles and integrate indicators into national dashboards.
+-   **Commission deeper research**
+    -   A **targeted study is needed** to understand low ANC4 uptake, combining **demand-side factors** (awareness, distance, cost) with **supply-side barriers** (health system reach, data gaps).
 
-**Bridge the ANC4–SBA gap**: - Where SBA is high but ANC4 is low, focus on **early pregnancy engagement** through demand creation and incentives.
+------------------------------------------------------------------------
 
-### For All Countries
-
-**Expand equity monitoring**: - Collect ANC4/SBA data disaggregated by **age, wealth, location, and parity**. - Use subnational maps to flag underserved populations.
-
-**Institutionalize annual tracking**: - Embed coverage indicators in routine monitoring systems. - Align with DHS/MICS survey cycles to ensure comparability over time.
-
-**Link maternal and child health**: - ANC4 and SBA are critical for achieving **SDG 3.1** (maternal) and **3.2** (child) — treat them as joint priority indicators in all reporting and strategy documents.
-
-# 8. Sources
+# 5. Sources
 
 -   WHO Indicator Metadata:
-    -   [ANC4](https://www.who.int/data/gho/indicator-metadata-registry/imr-details/3138)
-    -   [SBA](https://www.who.int/data/gho/indicator-metadata-registry/imr-details/474)
--   UNICEF U5MR Classification Framework
--   DHS and MICS survey programs
+    -   [ANC4](https://www.who.int/data/gho/indicator-metadata-registry/imr-details/80)
+    -   [SBA](https://data.who.int/indicators/i/F835E3B/1772666)
+-   [UNICEF Under-Five Mortality (U5MR) Overview](https://data.unicef.org/topic/child-survival/under-five-mortality/) – used to define on-track and off-track country groupings.
+-   UN SDG Indicator Metadata:
+    -   [SDG 3.1.1 – Maternal Mortality](https://unstats.un.org/sdgs/metadata/files/Metadata-03-01-01.pdf)
+    -   [SDG 3.1.2 – Skilled Birth Attendance (SBA)](https://unstats.un.org/sdgs/metadata/files/Metadata-03-01-02.pdf)
+    -   [SDG 3.2.1 – Under-Five Mortality](https://unstats.un.org/sdgs/metadata/files/Metadata-03-02-01.pdf)
+    -   [SDG 3.2.2 – Neonatal Mortality](https://unstats.un.org/sdgs/metadata/files/Metadata-03-02-02.pdf)
 -   Data derived from analytical script `02_analysis.R` (consultancy assessment deliverable)
