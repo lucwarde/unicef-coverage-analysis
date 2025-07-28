@@ -77,6 +77,41 @@ quality_summary <- df_final_wide %>%
 quality_summary
 
 
+
+# Pivot wider to identify ANC4 and SBA coverage per country
+df_wide_missing <- df_merge %>%
+  mutate(indicator_short = case_when(
+    grepl("ANC4", indicator) ~ "ANC4",
+    grepl("SAB", indicator)  ~ "SBA",
+    TRUE                     ~ NA_character_
+  )) %>%
+  select(iso3, OfficialName, group, indicator_short, coverage, births_2022) %>%
+  pivot_wider(names_from = indicator_short, values_from = coverage)
+
+# Identify reason for exclusion per country
+excluded_countries_detailed <- df_wide_missing %>%
+  filter(is.na(group) | is.na(ANC4) | is.na(SBA) | is.na(births_2022)) %>%
+  mutate(reason = case_when(
+    is.na(group) & is.na(ANC4) & is.na(SBA) & is.na(births_2022) ~ "Missing U5MR group, ANC4, SBA, and births",
+    is.na(group) & is.na(ANC4) & is.na(SBA)                     ~ "Missing U5MR group, ANC4, and SBA",
+    is.na(ANC4) & is.na(SBA)                                    ~ "Missing ANC4 and SBA",
+    is.na(ANC4)                                                 ~ "Missing ANC4 only",
+    is.na(SBA)                                                  ~ "Missing SBA only",
+    is.na(group)                                                ~ "Missing group",
+    is.na(births_2022)                                          ~ "Missing births",
+    TRUE                                                        ~ "Other"
+  ))
+
+# Count and summarize
+excluded_summary <- excluded_countries_detailed %>%
+  count(reason, name = "n") %>%
+  arrange(desc(n)) %>%
+  mutate(pct = round(100 * n / sum(n), 1)) %>%
+  rename(`Exclusion Reason` = reason,
+         `# Countries` = n,
+         `Share (%)` = pct)
+
+
 # ---- 4. Summary Statistics by Group ----
 
 summary_group <- df_final_wide %>%
@@ -133,9 +168,6 @@ df_top10_combined <- df_final_wide %>%
 
 
 
-# ---- 5. Save outputs (no header) ----
-
-
 
 
 # ---- 7. Reshape for Visualisation ----
@@ -144,13 +176,12 @@ df_long <- df_final_wide %>%
   pivot_longer(cols = c(anc4_coverage, sba_coverage), names_to = "indicator", values_to = "coverage")
 
 
-# Save country-level results
-write_csv(results_country, file.path(dir_output, "coverage_results_by_country.csv"), col_names = FALSE)
-saveRDS(results_country, file.path(dir_output, "coverage_results_by_country.rds"))
-
-
 
 # ---- 8. Save outputs ----
+
+
+saveRDS(excluded_summary, file.path(dir_output, "excluded_summary.rds"))
+saveRDS(excluded_countries, file.path(dir_output, "excluded_countries.rds"))
 
 saveRDS(summary_group, file.path(dir_output, "coverage_summary_group.rds"))
 
