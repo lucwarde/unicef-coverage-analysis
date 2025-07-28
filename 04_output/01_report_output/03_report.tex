@@ -99,13 +99,21 @@ Attendance (2018--2022)}
 \maketitle
 
 \begin{quote}
-\textbf{About this Submission}\\
+\textbf{About this Submission}
+
 This technical report supports the application to the following UNICEF
-D\&A consultancy positions:\\
--- Learning and Skills Data Analyst Consultant (\#581598)\\
--- Household Survey Data Analyst Consultant (\#581656)\\
--- Administrative Data Analyst Consultant (\#581696)\\
--- Microdata Harmonization Consultant (\#581699)
+D\&A consultancy positions:
+
+\begin{itemize}
+\item
+  Learning and Skills Data Analyst Consultant (\#581598)
+\item
+  Household Survey Data Analyst Consultant (\#581656)
+\item
+  Administrative Data Analyst Consultant (\#581696)
+\item
+  Microdata Harmonization Consultant (\#581699)
+\end{itemize}
 \end{quote}
 
 \section{1. Context, Objectives and
@@ -217,14 +225,22 @@ Averages}\label{population-weighted-averages}
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
 \begin{quote}
-\textbf{Data Sources and Limitations}\\
+\textbf{Data Sources and Limitations}
+
+\hfill\break
 - \textbf{Date of extraction and processing}: July 2025\\
-- \textbf{Inputs}:\\
-- ANC4 and SBA indicators from the
-\href{https://data.unicef.org/resources/data_explorer/unicef_f/?ag=UNICEF&df=GLOBAL_DATAFLOW&ver=1.0&dq=.MNCH_ANC4+MNCH_SAB.&startPeriod=2018&endPeriod=2022}{UNICEF
-Global Data Repository}\\
-- Birth projections from the \emph{UN World Population Prospects 2022}\\
-- U5MR groupings from UNICEF's official classification
+- \textbf{Inputs}:
+
+\begin{itemize}
+\item
+  ANC4 and SBA indicators from the
+  \href{https://data.unicef.org/resources/data_explorer/unicef_f/?ag=UNICEF&df=GLOBAL_DATAFLOW&ver=1.0&dq=.MNCH_ANC4+MNCH_SAB.&startPeriod=2018&endPeriod=2022}{UNICEF
+  Global Data Repository}
+\item
+  Birth projections from the \emph{UN World Population Prospects 2022}
+\item
+  U5MR groupings from UNICEF's official classification
+\end{itemize}
 
 Several countries were \textbf{excluded or only partially included} due
 to missing data (e.g., births, U5MR status, ANC4 or SBA coverage).\\
@@ -273,14 +289,24 @@ indicator}\label{data-completeness-by-indicator}
 
 \includegraphics{/Users/luc_w/Documents/GitHub/unicef-coverage-analysis/04_output/01_report_output/03_report_files/figure-latex/data-completeness-stackedbar-1.pdf}
 
-\textbf{Interpretation}\\
-- Over 60\% of on-track countries lack ANC4 data, weakening group-level
-reliability. - SBA data is nearly complete, enabling stronger
-comparisons. - \emph{27.4\%} of countries were fully excluded due to
-missing group, births, or both indicators. - Others were partially
-included, lacking ANC4 but contributing SBA data --- highlighting
-antenatal reporting gaps. - The table below outlines missing data
-patterns to guide data system improvements.
+\textbf{Interpretation}
+
+\begin{itemize}
+\item
+  Over 60\% of on-track countries lack ANC4 data, weakening group-level
+  reliability.
+\item
+  SBA data is nearly complete, enabling stronger comparisons.
+\item
+  \emph{27.4\%} of countries were fully excluded due to missing group,
+  births, or both indicators.
+\item
+  Others were partially included, lacking ANC4 but contributing SBA data
+  --- highlighting antenatal reporting gaps.
+\item
+  The table below outlines missing data patterns to guide data system
+  improvements.
+\end{itemize}
 
 \begin{longtable}[t]{lrr}
 \caption{\label{tab:exclusion-summary-table}Missing data patterns}\\
