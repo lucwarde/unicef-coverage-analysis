@@ -63,8 +63,8 @@ df_merge <- coverage_full_clean_data %>%
 # ---- 5. Save outputs ----
 
 # Save as CSV and RDS
-write_csv(df_final, file.path(dir_clean, "cleaned_data.csv"))
-saveRDS(df_final, file.path(dir_clean, "cleaned_data.rds"))
+write_csv(df_merge, file.path(dir_clean, "cleaned_data.csv"))
+saveRDS(df_merge, file.path(dir_clean, "cleaned_data.rds"))
 
 
 
