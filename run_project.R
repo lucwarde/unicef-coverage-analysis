@@ -16,3 +16,11 @@ rmarkdown::render(
   output_format = "all"
 )
 
+# ⚠️ If PDF rendering fails due to LaTeX block quote compatibility issues,
+# run the report in HTML only by using the alternative below:
+
+# rmarkdown::render(
+#   input = file.path(dir_script, "03_report.Rmd"),
+#   output_file = "03_report.html",
+#   output_dir = dir_report_output
+# )
