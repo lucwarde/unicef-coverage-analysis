@@ -7,7 +7,9 @@
 # Indicators coverage from UNICEF Global Data Repository at the country level:https://data.unicef.org/resources/data_explorer/unicef_f/?ag=UNICEF&df=GLOBAL_DATAFLOW&ver=1.0&dq=.MNCH_ANC4+MNCH_SAB.&startPeriod=2018&endPeriod=2022 
 
 
-coverage_full_data <- fread(file.path(dir_raw, "fusion_GLOBAL_DATAFLOW_UNICEF_1.0_all.csv"),   colClasses = 'character') 
+# coverage_full_data <- fread(file.path(dir_raw, "fusion_GLOBAL_DATAFLOW_UNICEF_1.0_all.csv"),   colClasses = 'character') #Also work with full data 
+coverage_full_data <- fread(file.path(dir_raw, "fusion_GLOBAL_DATAFLOW_UNICEF_1.0_.MNCH_ANC4+MNCH_SAB..csv"),   colClasses = 'character') 
+
 
 # Clean column names, filter relevant indicators (2018–2022), and keep most recent estimate per country
 coverage_full_clean_data <- coverage_full_data %>%
