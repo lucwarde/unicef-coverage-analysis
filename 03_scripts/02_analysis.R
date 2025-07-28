@@ -180,23 +180,23 @@ df_long <- df_final_wide %>%
 # ---- 8. Save outputs ----
 
 
-saveRDS(excluded_summary, file.path(dir_output, "excluded_summary.rds"))
-saveRDS(excluded_countries, file.path(dir_output, "excluded_countries.rds"))
+saveRDS(excluded_summary, file.path(dir_data_output, "excluded_summary.rds"))
+saveRDS(excluded_countries, file.path(dir_data_output, "excluded_countries.rds"))
 
-saveRDS(summary_group, file.path(dir_output, "coverage_summary_group.rds"))
-
-
-saveRDS(results_group, file.path(dir_output, "coverage_results_by_group.rds"))
-saveRDS(results_country, file.path(dir_output, "coverage_results_by_country.rds"))
+saveRDS(summary_group, file.path(dir_data_output, "coverage_summary_group.rds"))
 
 
-saveRDS(top10_anc4, file.path(dir_output, "top10_anc4.rds"))
-saveRDS(df_top10_combined, file.path(dir_output, "top10_combined_coverage.rds"))
+saveRDS(results_group, file.path(dir_data_output, "coverage_results_by_group.rds"))
+saveRDS(results_country, file.path(dir_data_output, "coverage_results_by_country.rds"))
 
-saveRDS(df_long, file.path(dir_output, "coverage_long_data.rds"))
-saveRDS(df_final_wide, file.path(dir_output, "coverage_wide_data.rds"))
-write_csv(df_long, file.path(dir_output, "df_long.csv"), col_names = TRUE)
-write_csv(df_final_wide, file.path(dir_output, "df_final_wide.csv"), col_names = TRUE)
+
+saveRDS(top10_anc4, file.path(dir_data_output, "top10_anc4.rds"))
+saveRDS(df_top10_combined, file.path(dir_data_output, "top10_combined_coverage.rds"))
+
+saveRDS(df_long, file.path(dir_data_output, "coverage_long_data.rds"))
+saveRDS(df_final_wide, file.path(dir_data_output, "coverage_wide_data.rds"))
+write_csv(df_long, file.path(dir_data_output, "df_long.csv"), col_names = TRUE)
+write_csv(df_final_wide, file.path(dir_data_output, "df_final_wide.csv"), col_names = TRUE)
 
 
 
