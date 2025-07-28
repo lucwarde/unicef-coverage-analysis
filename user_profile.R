@@ -16,7 +16,11 @@ required_packages <- c(
   "janitor",
   "scales",
   "here",
-  "rmarkdown"
+  "rmarkdown",
+  "dplyr",
+  "readr",
+  "ggplot2"
+
 )
 
 # Install missing packages
@@ -38,10 +42,11 @@ options(scipen = 999)
 dir_raw    <- here("01_rawdata")
 dir_clean  <- here("02_cleaned")
 dir_script <- here("03_scripts")
-dir_output <- here("04_output")
+dir_data_output <- here("04_output/02_data_output/")
+dir_report_output <- here("04_output/01_report_output/")
 
 # Create output folders if they don't exist
-dirs <- c(dir_clean, dir_output)
+dirs <- c(dir_clean, dir_data_output,dir_report_output )
 for (d in dirs) {
   if (!dir.exists(d)) dir.create(d, recursive = TRUE)
 }
