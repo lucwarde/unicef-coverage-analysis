@@ -19,9 +19,11 @@ required_packages <- c(
   "rmarkdown",
   "dplyr",
   "readr",
-  "ggplot2"
-
-)
+  "ggplot2",
+  "tidyr",
+  "plotly",
+  "knitr",
+  "kableExtra")
 
 # Install missing packages
 installed <- rownames(installed.packages())
